@@ -10,7 +10,46 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hello Selamat Datang, Silahkan coba fungsionalitas aplikasi artikel anda!!");
 });
-// Endpoint untuk mengambil data dari NewsAPI dan menyimpannya ke Firestore
+
+app.delete("/articles/delete-all", async (req, res) => {
+  try {
+    await Article.deleteAll();
+    res.send({ msg: "All articles have been deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting articles:", error.message);
+    res.status(500).send({ error: "Failed to delete articles" });
+  }
+});
+
+app.post("/article/create", async (req, res) => {
+  try {
+    const { title, author, description, category, content, publishedAt, source, url, urlToImage } = req.body;
+
+    if (!title || !content) {
+      return res.status(400).send({ error: "Title and content are required" });
+    }
+
+    const newArticle = {
+      title,
+      author: author || "Anonymous", // Default value jika author tidak diberikan
+      description: description || "No description provided",
+      category,
+      content,
+      publishedAt: publishedAt || new Date().toISOString(),
+      source: source || { name: "User Generated" },
+      url: url || "No URL provided",
+      urlToImage: urlToImage || "No image provided",
+    };
+
+    await Article.add(newArticle);
+
+    res.status(201).send({ msg: "Article added successfully", article: newArticle });
+  } catch (error) {
+    console.error("Error adding manual article:", error.message);
+    res.status(500).send({ error: "Failed to add manual article" });
+  }
+});
+
 app.get("/fetch-news", async (req, res) => {
   const { keyword = "gizi-bayi" } = req.query; // Kata kunci default adalah "stunting"
   try {
@@ -69,6 +108,30 @@ app.get("/articles", async (req, res) => {
   } catch (error) {
     console.error("Error fetching articles:", error.message);
     res.status(500).send({ error: "Failed to fetch articles" });
+  }
+});
+
+app.put("/articles/:id", async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+
+  try {
+    await Article.updateById(id, updates);
+    res.send({ msg: `Article with ID ${id} has been updated successfully`, updates });
+  } catch (error) {
+    console.error("Error updating article by ID:", error.message);
+    res.status(500).send({ error: `Failed to update article with ID ${id}` });
+  }
+});
+
+app.delete("/articles/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await Article.deleteById(id);
+    res.send({ msg: `Article with ID ${id} has been deleted successfully` });
+  } catch (error) {
+    console.error("Error deleting article by ID:", error.message);
+    res.status(500).send({ error: `Failed to delete article with ID ${id}` });
   }
 });
 

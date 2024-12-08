@@ -1,5 +1,5 @@
 const { initializeApp } = require("firebase/app");
-const { getFirestore, collection, addDoc, getDocs } = require("firebase/firestore");
+const { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } = require("firebase/firestore");
 
 // Konfigurasi Firebase
 const firebaseConfig = {
@@ -37,6 +37,37 @@ const Article = {
       throw error;
     }
   },
+  deleteAll: async () => {
+    try {
+      const snapshot = await getDocs(collection(db, "Articles"));
+      const deletePromises = snapshot.docs.map((doc) => deleteDoc(doc.ref));
+      await Promise.all(deletePromises);
+      console.log("All articles deleted successfully");
+    } catch (error) {
+      console.error("Error deleting articles:", error);
+    }
+  },
+  deleteById: async (id) => {
+    try {
+      const articleRef = doc(db, "Articles", id);
+      await deleteDoc(articleRef);
+      console.log(`Article with id ${id} deleted successfully`);
+    } catch (error) {
+      console.error("Error deleting article by ID:", error);
+      throw error;
+    }
+  },
+
+  updateById: async (id, data) => {
+    try {
+      const articleRef = doc(db, "Articles", id);
+      await updateDoc(articleRef, data);
+      console.log(`Article with id ${id} updated successfully`);
+    } catch (error) {
+      console.error("Error updating article by ID:", error);
+      throw error;
+    }
+  }
 };
 
 module.exports = Article;
