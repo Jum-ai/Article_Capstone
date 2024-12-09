@@ -3,14 +3,16 @@ const { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc } =
 
 // Konfigurasi Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyAlMkAYfm4i0LYHdglcrCUQluxJALQjgbU",
-  authDomain: "article-capstone.firebaseapp.com",
-  projectId: "article-capstone",
-  storageBucket: "article-capstone.firebasestorage.app",
-  messagingSenderId: "357569607616",
-  appId: "1:357569607616:web:16378895997af5a65c7a25",
-  measurementId: "G-91PL82CXTN",
+  apiKey: "AIzaSyBJNxqk4yyb4EzBBtAtad71xUEPfdgtXyo",
+  authDomain: "capstone-bangkit-2024.firebaseapp.com",
+  databaseURL: "https://capstone-bangkit-2024-default-rtdb.firebaseio.com",
+  projectId: "capstone-bangkit-2024",
+  storageBucket: "capstone-bangkit-2024.firebasestorage.app",
+  messagingSenderId: "1005631098859",
+  appId: "1:1005631098859:web:ff23f0fe175e26536793ae",
+  measurementId: "G-QYDKJZRXY1"
 };
+
 
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
